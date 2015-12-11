@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace Example2.src
+namespace Example4.src
 {
-    class Example2
+    class Example4
     {
         private static ArthikaHFT wrapper;
         private static bool ssl=true;
@@ -22,7 +22,7 @@ namespace Example2.src
         private static string ssl_cert;
         private static int interval;
 
-        public static void Main2(string[] args)
+        public static void Main4(string[] args)
         {
 
             // get properties from file
@@ -38,30 +38,41 @@ namespace Example2.src
                 return;
             }
 
-            // PRICE POLLING
+            // POSITION POLLING
 
-            // get tinterfaces
-            List<ArthikaHFT.tinterfaceTick> tinterfaceTickList = wrapper.getInterface();
+            // get accounts
+            List<ArthikaHFT.accountTick> accountTickList = wrapper.getAccount();
 
             Console.WriteLine("Starting Polling1");
-            List<string> tinterfacelist = null;
-            if (tinterfaceTickList!=null && tinterfaceTickList.Count>1)
+            ArthikaHFT.positionTick positionTickList1 = wrapper.getPosition(null, new List<string> { "EUR_USD", "GBP_JPY", "GBP_USD" }, null);
+            Console.WriteLine("StrategyPL: " + positionTickList1.accountingTick.strategyPL + " TotalEquity: " + positionTickList1.accountingTick.totalequity + " UsedMargin: " + positionTickList1.accountingTick.usedmargin + " FreeMargin: " + positionTickList1.accountingTick.freemargin);
+            foreach (ArthikaHFT.assetPositionTick tick in positionTickList1.assetPositionTickList)
             {
-                tinterfacelist = new List<string>();
-                tinterfacelist.Add(tinterfaceTickList[1].name);
+                Console.WriteLine("Asset: " + tick.asset + " Account: " + tick.account + " Exposure: " + tick.exposure + " TotalRisk: " + tick.totalrisk);
             }
-            List<ArthikaHFT.priceTick> priceTickList1 = wrapper.getPrice(new List<string> { "EUR_USD", "EUR_GBP", "EUR_JPY", "GBP_JPY", "GBP_USD", "USD_JPY" }, tinterfacelist, ArthikaHFT.GRANULARITY_TOB, 1);
-            foreach (ArthikaHFT.priceTick tick in priceTickList1)
+            foreach (ArthikaHFT.securityPositionTick tick in positionTickList1.securityPositionTickList)
             {
-                Console.WriteLine("Security: " + tick.security + " Price: " + tick.price.ToString("F" + tick.pips) + " Side: " + tick.side + " TI: " + tick.tinterface + " Liquidity: " + tick.liquidity);
+                Console.WriteLine("Security: " + tick.security + " Account: " + tick.account + " Equity: " + tick.equity + " Exposure: " + tick.exposure + " Price: " + tick.price.ToString("F" + tick.pips) + " Pips: " + tick.pips);
             }
             Console.WriteLine("Polling1 Finished");
 
             Console.WriteLine("Starting Polling2");
-            List<ArthikaHFT.priceTick> priceTickList2 = wrapper.getPrice(new List<string> { "EUR_USD" }, null, ArthikaHFT.GRANULARITY_FAB, 4);
-            foreach (ArthikaHFT.priceTick tick in priceTickList2)
+            List<string> accountlist = null;
+            if (accountTickList!=null && accountTickList.Count > 1)
             {
-                Console.WriteLine("Security: " + tick.security + " Price: " + tick.price.ToString("F" + tick.pips) + " Side: " + tick.side + " TI: " + tick.tinterface + " Liquidity: " + tick.liquidity);
+                accountlist = new List<string>();
+                accountlist.Add(accountTickList[0].name);
+                accountlist.Add(accountTickList[1].name);
+            }
+            ArthikaHFT.positionTick positionTickList2 = wrapper.getPosition(new List<string> { "EUR", "GBP", "JPY", "USD" }, null, accountlist);
+            Console.WriteLine("StrategyPL: " + positionTickList2.accountingTick.strategyPL + " TotalEquity: " + positionTickList2.accountingTick.totalequity + " UsedMargin: " + positionTickList2.accountingTick.usedmargin + " FreeMargin: " + positionTickList2.accountingTick.freemargin);
+            foreach (ArthikaHFT.assetPositionTick tick in positionTickList2.assetPositionTickList)
+            {
+                Console.WriteLine("Asset: " + tick.asset + " Account: " + tick.account + " Exposure: " + tick.exposure + " TotalRisk: " + tick.totalrisk);
+            }
+            foreach (ArthikaHFT.securityPositionTick tick in positionTickList2.securityPositionTickList)
+            {
+                Console.WriteLine("Security: " + tick.security + " Account: " + tick.account + " Equity: " + tick.equity + " Exposure: " + tick.exposure + " Price: " + tick.price.ToString("F" + tick.pips) + " Pips: " + tick.pips);
             }
             Console.WriteLine("Polling2 Finished");
 

@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.IO;
 
-namespace Example2.src
+namespace Example6.src
 {
-    class Example2
+    class Example6
     {
         private static ArthikaHFT wrapper;
         private static bool ssl=true;
@@ -22,7 +22,7 @@ namespace Example2.src
         private static string ssl_cert;
         private static int interval;
 
-        public static void Main2(string[] args)
+        public static void Main6(string[] args)
         {
 
             // get properties from file
@@ -38,30 +38,31 @@ namespace Example2.src
                 return;
             }
 
-            // PRICE POLLING
+            // ORDER POLLING
 
             // get tinterfaces
             List<ArthikaHFT.tinterfaceTick> tinterfaceTickList = wrapper.getInterface();
 
             Console.WriteLine("Starting Polling1");
-            List<string> tinterfacelist = null;
-            if (tinterfaceTickList!=null && tinterfaceTickList.Count>1)
+            List<ArthikaHFT.orderTick> orderTickList1 = wrapper.getOrder(new List<string> { "EUR_USD", "GBP_JPY", "GBP_USD" }, null, null);
+            foreach (ArthikaHFT.orderTick tick in orderTickList1)
             {
-                tinterfacelist = new List<string>();
-                tinterfacelist.Add(tinterfaceTickList[1].name);
-            }
-            List<ArthikaHFT.priceTick> priceTickList1 = wrapper.getPrice(new List<string> { "EUR_USD", "EUR_GBP", "EUR_JPY", "GBP_JPY", "GBP_USD", "USD_JPY" }, tinterfacelist, ArthikaHFT.GRANULARITY_TOB, 1);
-            foreach (ArthikaHFT.priceTick tick in priceTickList1)
-            {
-                Console.WriteLine("Security: " + tick.security + " Price: " + tick.price.ToString("F" + tick.pips) + " Side: " + tick.side + " TI: " + tick.tinterface + " Liquidity: " + tick.liquidity);
+                Console.WriteLine("TempId: " + tick.tempid + " OrderId: " + tick.orderid + " Security: " + tick.security + " Account: " + tick.account + " Quantity: " + tick.quantity + " Type: " + tick.type + " Side: " + tick.side + " Status: " + tick.status);
             }
             Console.WriteLine("Polling1 Finished");
 
-            Console.WriteLine("Starting Polling2");
-            List<ArthikaHFT.priceTick> priceTickList2 = wrapper.getPrice(new List<string> { "EUR_USD" }, null, ArthikaHFT.GRANULARITY_FAB, 4);
-            foreach (ArthikaHFT.priceTick tick in priceTickList2)
+	        Console.WriteLine("Starting Polling2");
+            List<string> tinterfacelist = null;
+            if (tinterfaceTickList!=null && tinterfaceTickList.Count > 1)
             {
-                Console.WriteLine("Security: " + tick.security + " Price: " + tick.price.ToString("F" + tick.pips) + " Side: " + tick.side + " TI: " + tick.tinterface + " Liquidity: " + tick.liquidity);
+                tinterfacelist = new List<String>();
+                tinterfacelist.Add(tinterfaceTickList[0].name);
+                tinterfacelist.Add(tinterfaceTickList[1].name);
+            }
+            List<ArthikaHFT.orderTick> orderTickList2 = wrapper.getOrder(null, tinterfacelist, null);
+            foreach (ArthikaHFT.orderTick tick in orderTickList2)
+            {
+                Console.WriteLine("TempId: " + tick.tempid + " OrderId: " + tick.orderid + " Security: " + tick.security + " Account: " + tick.account + " Quantity: " + tick.quantity + " Type: " + tick.type + " Side: " + tick.side + " Status: " + tick.status);
             }
             Console.WriteLine("Polling2 Finished");
 

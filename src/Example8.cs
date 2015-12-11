@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.IO;
+using System.Threading;
 
-namespace Example2.src
+namespace Example8.src
 {
-    class Example2
+    class Example8
     {
         private static ArthikaHFT wrapper;
         private static bool ssl=true;
@@ -22,7 +23,7 @@ namespace Example2.src
         private static string ssl_cert;
         private static int interval;
 
-        public static void Main2(string[] args)
+        public static void Main8(string[] args)
         {
 
             // get properties from file
@@ -38,32 +39,72 @@ namespace Example2.src
                 return;
             }
 
-            // PRICE POLLING
-
+            // CANCEL PENDING ORDER WITH ORDER POLLING
+            
             // get tinterfaces
             List<ArthikaHFT.tinterfaceTick> tinterfaceTickList = wrapper.getInterface();
 
             Console.WriteLine("Starting Polling1");
-            List<string> tinterfacelist = null;
-            if (tinterfaceTickList!=null && tinterfaceTickList.Count>1)
-            {
-                tinterfacelist = new List<string>();
-                tinterfacelist.Add(tinterfaceTickList[1].name);
-            }
-            List<ArthikaHFT.priceTick> priceTickList1 = wrapper.getPrice(new List<string> { "EUR_USD", "EUR_GBP", "EUR_JPY", "GBP_JPY", "GBP_USD", "USD_JPY" }, tinterfacelist, ArthikaHFT.GRANULARITY_TOB, 1);
-            foreach (ArthikaHFT.priceTick tick in priceTickList1)
-            {
-                Console.WriteLine("Security: " + tick.security + " Price: " + tick.price.ToString("F" + tick.pips) + " Side: " + tick.side + " TI: " + tick.tinterface + " Liquidity: " + tick.liquidity);
+            List<ArthikaHFT.orderTick> orderTickList1 = wrapper.getOrder(null, null, new List<string> { ArthikaHFT.ORDERTYPE_PENDING, ArthikaHFT.ORDERTYPE_CANCELED });
+            foreach (ArthikaHFT.orderTick tick in orderTickList1)
+            {    
+                Console.WriteLine("TempId: " + tick.tempid + " OrderId: " + tick.orderid + " Security: " + tick.security + " Account: " + tick.account + " Quantity: " + tick.quantity + " Type: " + tick.type + " Side: " + tick.side + " Status: " + tick.status + " Price: " + tick.limitprice);
             }
             Console.WriteLine("Polling1 Finished");
+            Thread.Sleep(2000);
+
+            // Create pending order. If buy, order price must be lower than current price
+            string tinterface1 = tinterfaceTickList[0].name;
+            ArthikaHFT.orderRequest order1 = new ArthikaHFT.orderRequest();
+            order1.security = "EUR_USD";
+            order1.tinterface = tinterface1;
+            order1.quantity = 500000;
+            order1.side = ArthikaHFT.SIDE_BUY;
+            order1.type = ArthikaHFT.TYPE_LIMIT;
+            order1.timeinforce = ArthikaHFT.VALIDITY_DAY;
+            order1.price = 1.00548;
+
+            Console.WriteLine("Sending order");
+            int tempid = -1;
+            string fixid = "";
+            List<ArthikaHFT.orderRequest> orderList = wrapper.setOrder(new List<ArthikaHFT.orderRequest> { order1 });
+            foreach (ArthikaHFT.orderRequest orderresponse in orderList)
+            {
+                Console.WriteLine("Id: " + orderresponse.tempid + " Security: " + orderresponse.security + " Side: " + orderresponse.side + " Quantity: " + orderresponse.quantity + " Price: " + orderresponse.price + " Type: " + orderresponse.type);
+                tempid = orderresponse.tempid;
+            }
+            Console.WriteLine("Order sended order");
+            Thread.Sleep(2000);
 
             Console.WriteLine("Starting Polling2");
-            List<ArthikaHFT.priceTick> priceTickList2 = wrapper.getPrice(new List<string> { "EUR_USD" }, null, ArthikaHFT.GRANULARITY_FAB, 4);
-            foreach (ArthikaHFT.priceTick tick in priceTickList2)
+            List<ArthikaHFT.orderTick> orderTickList2 = wrapper.getOrder(null, null, new List<string> { ArthikaHFT.ORDERTYPE_PENDING, ArthikaHFT.ORDERTYPE_CANCELED });
+            foreach (ArthikaHFT.orderTick tick in orderTickList2)
             {
-                Console.WriteLine("Security: " + tick.security + " Price: " + tick.price.ToString("F" + tick.pips) + " Side: " + tick.side + " TI: " + tick.tinterface + " Liquidity: " + tick.liquidity);
+                Console.WriteLine("TempId: " + tick.tempid + " OrderId: " + tick.orderid + " Security: " + tick.security + " Account: " + tick.account + " Quantity: " + tick.quantity + " Type: " + tick.type + " Side: " + tick.side + " Status: " + tick.status + " Price: " + tick.limitprice);
+                if (tempid==tick.tempid)
+                {
+                    fixid = tick.fixid;
+                }
             }
             Console.WriteLine("Polling2 Finished");
+            Thread.Sleep(2000);
+
+            Console.WriteLine("Cancel order");
+            List<ArthikaHFT.cancelTick> cancelList = wrapper.cancelOrder(new List<string> { fixid });
+            foreach (ArthikaHFT.cancelTick cancelresponse in cancelList)
+            {
+                Console.WriteLine("FixId: " + cancelresponse.fixid + " Result: " + cancelresponse.result);
+            }
+            Console.WriteLine("Order canceled");
+            Thread.Sleep(2000);
+		
+            Console.WriteLine("Starting Polling3");
+            List<ArthikaHFT.orderTick> orderTickList3 = wrapper.getOrder(null, null, new List<string> { ArthikaHFT.ORDERTYPE_PENDING, ArthikaHFT.ORDERTYPE_CANCELED });
+            foreach (ArthikaHFT.orderTick tick in orderTickList3)
+            {
+                Console.WriteLine("TempId: " + tick.tempid + " OrderId: " + tick.orderid + " Security: " + tick.security + " Account: " + tick.account + " Quantity: " + tick.quantity + " Type: " + tick.type + " Side: " + tick.side + " Status: " + tick.status + " Price: " + tick.limitprice);
+            }
+            Console.WriteLine("Polling3 Finished");
 
             Console.Read();
         }

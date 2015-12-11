@@ -727,6 +727,14 @@ public class ArthikaHFT
         return finishStreaming(threadname);
     }
 
+    public List<orderRequest> setOrder(List<orderRequest> orders)
+    {
+		hftRequest hftrequest = new hftRequest();
+		hftrequest.setOrder = new setOrderRequest(user, token, orders);
+        Object res = sendRequest(hftrequest, "/setOrder", false, null);
+		return (List<orderRequest>) res;
+	}
+
     public List<cancelTick> cancelOrder(List<string> orders)
     {
         hftRequest hftrequest = new hftRequest();
@@ -786,7 +794,7 @@ public class ArthikaHFT
         using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
         {
             streamWriter.WriteLine(serializer.Serialize(hftrequest));
-            //Console.WriteLine(serializer.Serialize(hftrequest));
+            Console.WriteLine(serializer.Serialize(hftrequest));
         }
         
         HttpWebResponse httpResponse;
@@ -1066,12 +1074,12 @@ public class ArthikaHFT
         }
         catch (SocketException)
         {
-            //Console.WriteLine("B" + ex.Message);
+            //Console.WriteLine(ex.Message);
             return null;
         }
         catch (IOException)
         {
-            //Console.WriteLine("C" + ioex.Message);
+            //Console.WriteLine(ioex.Message);
             return null;
         }
     }

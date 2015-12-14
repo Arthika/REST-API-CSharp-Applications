@@ -5,7 +5,7 @@ using System.Text;
 using System.IO;
 using System.Threading;
 
-class ArthikaHFTListenerImp1 : ArthikaHFTListener
+class ArthikaHFTListenerImp12 : ArthikaHFTListener
 {
 
     void ArthikaHFTListener.timestampEvent(string timestamp)
@@ -28,7 +28,35 @@ class ArthikaHFTListenerImp1 : ArthikaHFTListener
         foreach (ArthikaHFT.priceTick tick in priceTickList)
         {
             Console.WriteLine("Security: " + tick.security + " Price: " + tick.price.ToString("F" + tick.pips) + " Side: " + tick.side + " TI: " + tick.tinterface + " Liquidity: " + tick.liquidity);
+            if (tick.side.Equals("ask"))
+            {
+                if (tick.tinterface.Equals(Example12.tinterface2))
+                {
+                    Example12.bestcanask = tick.price;
+                    Example12.bestcanaskliquidity = tick.liquidity;
+                }
+                if (tick.tinterface.Equals(Example12.tinterface1))
+                {
+                    Example12.bestbaxask = tick.price;
+                    Example12.bestbaxaskliquidity = tick.liquidity;
+                }
+
+            }
+            if (tick.side.Equals("bid"))
+            {
+                if (tick.tinterface.Equals(Example12.tinterface2))
+                {
+                    Example12.bestcanbid = tick.price;
+                    Example12.bestcanbidliquidity = tick.liquidity;
+                }
+                if (tick.tinterface.Equals(Example12.tinterface1))
+                {
+                    Example12.bestbaxbid = tick.price;
+                    Example12.bestbaxbidliquidity = tick.liquidity;
+                }
+            }
         }
+        Example12.checkPrices();
     }
 
     void ArthikaHFTListener.accountingEvent(ArthikaHFT.accountingTick accountingTick)
@@ -116,7 +144,7 @@ class ArthikaHFTListenerImp1 : ArthikaHFTListener
     }
 }
 
-class Example1
+class Example12
 {
     private static ArthikaHFT wrapper;
     private static bool ssl = true;
@@ -132,7 +160,24 @@ class Example1
     private static string ssl_cert;
     private static int interval;
 
-    public static void Main1(string[] args)
+    public static double bestcanask = 0.0;
+    public static int bestcanaskliquidity = 0;
+    public static string bestcanaskti = "";
+    public static double bestcanbid = 0.0;
+    public static int bestcanbidliquidity = 0;
+    public static string bestcanbidti = "";
+
+    public static double bestbaxask = 0.0;
+    public static int bestbaxaskliquidity = 0;
+    public static string bestbaxaskti = "";
+    public static double bestbaxbid = 0.0;
+    public static int bestbaxbidliquidity = 0;
+    public static string bestbaxbidti = "";
+
+    public static string tinterface1 = "";
+    public static string tinterface2 = "";
+
+    public static void Main12(string[] args)
     {
 
         // get properties from file
@@ -148,45 +193,33 @@ class Example1
             return;
         }
 
-        // PRICE STREAMING
+        // STRATEGY
 
         // get tinterfaces
         List<ArthikaHFT.tinterfaceTick> tinterfaceTickList = wrapper.getInterface();
-
-        // Open first price streaming for one security in all tinterfaces
-        string id1 = wrapper.getPriceBegin(new List<string> { "GBP_USD" }, null, ArthikaHFT.GRANULARITY_TOB, 1, interval, new ArthikaHFTListenerImp1());
-        Thread.Sleep(5000);
-
-        // Open second price streaming for two securities in the two first tinterfaces
-        List<String> tinterfacelist = null;
+        tinterface1 = tinterfaceTickList[0].name;
+        if (tinterfaceTickList.Count > 1)
+        {
+            tinterface2 = tinterfaceTickList[1].name;
+        }
+        else
+        {
+            tinterface2 = tinterfaceTickList[0].name;
+        }
+        List<string> tinterfacelist = null;
         if (tinterfaceTickList != null && tinterfaceTickList.Count > 1)
         {
             tinterfacelist = new List<string>();
-            tinterfacelist.Add(tinterfaceTickList.ElementAt(0).name);
-            tinterfacelist.Add(tinterfaceTickList.ElementAt(1).name);
+            tinterfacelist.Add(tinterface1);
+            tinterfacelist.Add(tinterface2);
         }
-        string id2 = wrapper.getPriceBegin(new List<string> { "EUR_USD", "GBP_JPY" }, tinterfacelist, ArthikaHFT.GRANULARITY_FAB, 2, interval, new ArthikaHFTListenerImp1());
-        Thread.Sleep(5000);
 
-        // Close second price streaming
-        wrapper.getPriceEnd(id2);
-        Thread.Sleep(5000);
+        // Open price streaming
+        string id1 = wrapper.getPriceBegin(new List<string> { "EUR_USD" }, tinterfacelist, ArthikaHFT.GRANULARITY_TOB, 1, interval, new ArthikaHFTListenerImp12());
+        Thread.Sleep(20000);
 
-        // Close first price streaming
+        // Close price streaming
         wrapper.getPriceEnd(id1);
-        Thread.Sleep(5000);
-
-        // Open third price streaming for six securities in the first tinterface
-        if (tinterfaceTickList != null && tinterfaceTickList.Count > 0)
-        {
-            tinterfacelist = new List<string>();
-            tinterfacelist.Add(tinterfaceTickList.ElementAt(0).name);
-        }
-        string id3 = wrapper.getPriceBegin(new List<string> { "EUR_USD", "EUR_GBP", "EUR_JPY", "GBP_JPY", "GBP_USD", "USD_JPY" }, tinterfacelist, ArthikaHFT.GRANULARITY_TOB, 1, interval, new ArthikaHFTListenerImp1());
-        Thread.Sleep(5000);
-
-        // Close third price streaming
-        wrapper.getPriceEnd(id3);
 
         Console.Read();
     }
@@ -267,4 +300,64 @@ class Example1
             Console.WriteLine(ex.Message);
         }
     }
+
+    public static void checkPrices()
+    {
+        if ((bestcanask < bestbaxbid && bestcanask > 0.0) || (bestbaxask < bestcanbid && bestbaxask > 0.0))
+        {
+            ArthikaHFT.orderRequest orderask = new ArthikaHFT.orderRequest();
+            ArthikaHFT.orderRequest orderbid = new ArthikaHFT.orderRequest();
+            int quantity = 0;
+            if (bestcanask < bestbaxbid && bestcanask > 0.0)
+            {
+                quantity = bestcanaskliquidity;
+                if (bestcanaskliquidity > bestbaxbidliquidity)
+                {
+                    quantity = bestbaxbidliquidity;
+                }
+                orderask.tinterface = tinterface2;
+                orderbid.tinterface = tinterface1;
+                orderask.price = bestcanask;
+                orderbid.price = bestbaxbid;
+            }
+            if (bestbaxask < bestcanbid && bestbaxask > 0.0)
+            {
+                quantity = bestbaxaskliquidity;
+                if (bestbaxaskliquidity > bestcanbidliquidity)
+                {
+                    quantity = bestcanbidliquidity;
+                }
+                orderask.tinterface = tinterface1;
+                orderbid.tinterface = tinterface2;
+                orderask.price = bestbaxask;
+                orderbid.price = bestcanbid;
+            }
+
+            orderask.security = "EUR_USD";
+            orderask.quantity = quantity;
+            orderask.side = ArthikaHFT.SIDE_BUY;
+            orderask.type = ArthikaHFT.TYPE_LIMIT;
+            orderask.timeinforce = ArthikaHFT.VALIDITY_DAY;
+
+            orderbid.security = "EUR_USD";
+            orderbid.quantity = quantity;
+            orderbid.side = ArthikaHFT.SIDE_SELL;
+            orderbid.type = ArthikaHFT.TYPE_LIMIT;
+            orderbid.timeinforce = ArthikaHFT.VALIDITY_DAY;
+
+            try
+            {
+                List<ArthikaHFT.orderRequest> orderList1 = wrapper.setOrder(new List<ArthikaHFT.orderRequest> { orderask, orderbid });
+                foreach (ArthikaHFT.orderRequest orderresponse in orderList1)
+                {
+                    Console.WriteLine("Id: " + orderresponse.tempid + " Security: " + orderresponse.security + " Side: " + orderresponse.side + " Quantity: " + orderresponse.quantity + " Price: " + orderresponse.price + " Type: " + orderresponse.type);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.Message);
+            }
+        }
+    }
 }
+

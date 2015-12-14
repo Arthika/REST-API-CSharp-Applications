@@ -48,6 +48,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="src\ArthikaHFT.cs" />
+    <Compile Include="src\Example13.cs" />
+    <Compile Include="src\Example14.cs" />
+    <Compile Include="src\Example12.cs" />
     <Compile Include="src\Example11.cs" />
     <Compile Include="src\Example10.cs" />
     <Compile Include="src\Example9.cs" />

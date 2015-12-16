@@ -1,4 +1,4 @@
-# REST API Java Applications
+# REST API C# Applications
 This repository contains complete Application Examples using our C# REST API wrapper
 
 * Example0: GET ACCOUNTS AND TINTERFACES

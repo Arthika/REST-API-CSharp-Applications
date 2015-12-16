@@ -3,10 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Net.Sockets;
-using System.Web.Script.Serialization;
+using System.Reflection;
 using System.Security.Cryptography;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading;
+using System.Web.Script.Serialization;
 
 // Note: To enable JSON (JavaScriptSerializer) add following reference: System.Web.Extensions
 
@@ -783,6 +784,7 @@ public class ArthikaHFT
             httpWebRequest = (HttpWebRequest)WebRequest.Create(domain + ":" + request_port + url_polling + urlpath);
         }
         JavaScriptSerializer serializer = new JavaScriptSerializer();
+        serializer.RegisterConverters(new JavaScriptConverter[] { new NullPropertiesConverter() });
         httpWebRequest.ContentType = "application/json";
         httpWebRequest.Method = "POST";
         if (ssl)
@@ -825,16 +827,16 @@ public class ArthikaHFT
         }
     }
 
-    public Object handleResponse(StreamReader streamReader, bool stream, ArthikaHFTListener listener)
+    private Object handleResponse(StreamReader streamReader, bool stream, ArthikaHFTListener listener)
     {
         try
         {
             JavaScriptSerializer serializer = new JavaScriptSerializer();
-            
-            while (true)
+            hftResponse response;
+            String line;
+
+            while ((line = streamReader.ReadLine()) != null)
             {
-                hftResponse response;
-                string line = streamReader.ReadLine();
                 try{
                     response = serializer.Deserialize<hftResponse>(line);
                 }
@@ -1066,6 +1068,7 @@ public class ArthikaHFT
                 }
 
             }
+            return null;
         }
         catch (WebException)
         {
@@ -1110,5 +1113,34 @@ public class ArthikaHFT
         streamReaderMap.Remove(thread);
 		return true;
 	}
+
+    private class NullPropertiesConverter : JavaScriptConverter
+    {
+        public override object Deserialize(IDictionary<string, object> dictionary, Type type, JavaScriptSerializer serializer)
+        {
+            throw new NotImplementedException();
+        }
+
+        public override IDictionary<string, object> Serialize(object obj, JavaScriptSerializer serializer)
+        {
+            var jsonExample = new Dictionary<string, object>();
+            foreach (var prop in obj.GetType().GetProperties())
+            {
+                //check if decorated with ScriptIgnore attribute
+                bool ignoreProp = prop.IsDefined(typeof(ScriptIgnoreAttribute), true);
+
+                var value = prop.GetValue(obj, BindingFlags.Public, null, null, null);
+                if (value != null && !ignoreProp)
+                    jsonExample.Add(prop.Name, value);
+            }
+
+            return jsonExample;
+        }
+
+        public override IEnumerable<Type> SupportedTypes
+        {
+            get { return GetType().Assembly.GetTypes(); }
+        }
+    }
 
 }

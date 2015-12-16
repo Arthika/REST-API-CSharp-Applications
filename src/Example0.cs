@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 class Example0
@@ -48,10 +46,11 @@ class Example0
             Console.WriteLine("Name: " + tick.name + " Account: " + tick.account + " Commissions: " + tick.commissions);
         }
 
+        Console.WriteLine("Press Enter to exit");
         Console.Read();
     }
 
-    public static void getProperties()
+    private static void getProperties()
     {
         try
         {

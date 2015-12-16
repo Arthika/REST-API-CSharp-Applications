@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
 
 class Example2
@@ -63,10 +61,11 @@ class Example2
         }
         Console.WriteLine("Polling2 Finished");
 
+        Console.WriteLine("Press Enter to exit");
         Console.Read();
     }
 
-    public static void getProperties()
+    private static void getProperties()
     {
         try
         {

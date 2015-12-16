@@ -8,7 +8,7 @@
     <ProjectGuid>{3290AE33-FE03-4EEB-A89D-CB81D9DDD6E5}</ProjectGuid>
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>REST-API-CSharp-Applications</RootNamespace>
+    <RootNamespace>Main</RootNamespace>
     <AssemblyName>REST-API-CSharp-Applications</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>

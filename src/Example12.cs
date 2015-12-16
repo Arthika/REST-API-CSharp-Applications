@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 class ArthikaHFTListenerImp12 : ArthikaHFTListener
@@ -221,10 +220,11 @@ class Example12
         // Close price streaming
         wrapper.getPriceEnd(id1);
 
+        Console.WriteLine("Press Enter to exit");
         Console.Read();
     }
 
-    public static void getProperties()
+    private static void getProperties()
     {
         try
         {

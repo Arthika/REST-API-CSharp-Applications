@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.IO;
+using System.Linq;
 using System.Threading;
 
 class ArthikaHFTListenerImp3 : ArthikaHFTListener
@@ -196,10 +195,11 @@ class Example3
         // Close position streaming
         wrapper.getPositionEnd(id1);
 
+        Console.WriteLine("Press Enter to exit");
         Console.Read();
     }
 
-    public static void getProperties()
+    private static void getProperties()
     {
         try
         {

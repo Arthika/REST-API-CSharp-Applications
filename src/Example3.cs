@@ -154,7 +154,7 @@ class Example3
 
         string tinterface1 = tinterfaceTickList[0].name;
         ArthikaHFT.orderRequest order1 = new ArthikaHFT.orderRequest();
-        order1.security = "EUR_USD";
+        order1.security = "EUR/USD";
         order1.tinterface = tinterface1;
         order1.quantity = 400000;
         order1.side = ArthikaHFT.SIDE_SELL;
@@ -172,7 +172,7 @@ class Example3
             tinterface2 = tinterfaceTickList[0].name;
         }
         ArthikaHFT.orderRequest order2 = new ArthikaHFT.orderRequest();
-        order2.security = "GBP_USD";
+        order2.security = "GBP/USD";
         order2.tinterface = tinterface2;
         order2.quantity = 500000;
         order2.side = ArthikaHFT.SIDE_BUY;
@@ -181,7 +181,7 @@ class Example3
         order2.price = 1.67389;
 
         // Open position streaming
-        string id1 = wrapper.getPositionBegin(null, new List<string> { "EUR_USD", "GBP_USD" }, null, interval, new ArthikaHFTListenerImp3());
+        string id1 = wrapper.getPositionBegin(null, new List<string> { "EUR/USD", "GBP/USD" }, null, interval, new ArthikaHFTListenerImp3());
         Thread.Sleep(5000);
 
         // Create two orders

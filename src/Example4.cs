@@ -40,7 +40,7 @@ class Example4
         List<ArthikaHFT.accountTick> accountTickList = wrapper.getAccount();
 
         Console.WriteLine("Starting Polling1");
-        ArthikaHFT.positionTick positionTickList1 = wrapper.getPosition(null, new List<string> { "EUR_USD", "GBP_JPY", "GBP_USD" }, null);
+        ArthikaHFT.positionTick positionTickList1 = wrapper.getPosition(null, new List<string> { "EUR/USD", "GBP/JPY", "GBP/USD" }, null);
         Console.WriteLine("StrategyPL: " + positionTickList1.accountingTick.strategyPL + " TotalEquity: " + positionTickList1.accountingTick.totalequity + " UsedMargin: " + positionTickList1.accountingTick.usedmargin + " FreeMargin: " + positionTickList1.accountingTick.freemargin);
         foreach (ArthikaHFT.assetPositionTick tick in positionTickList1.assetPositionTickList)
         {

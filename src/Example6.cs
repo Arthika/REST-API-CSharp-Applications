@@ -40,7 +40,7 @@ class Example6
         List<ArthikaHFT.tinterfaceTick> tinterfaceTickList = wrapper.getInterface();
 
         Console.WriteLine("Starting Polling1");
-        List<ArthikaHFT.orderTick> orderTickList1 = wrapper.getOrder(new List<string> { "EUR_USD", "GBP_JPY", "GBP_USD" }, null, null);
+        List<ArthikaHFT.orderTick> orderTickList1 = wrapper.getOrder(new List<string> { "EUR/USD", "GBP/JPY", "GBP/USD" }, null, null);
         foreach (ArthikaHFT.orderTick tick in orderTickList1)
         {
             Console.WriteLine("TempId: " + tick.tempid + " OrderId: " + tick.orderid + " Security: " + tick.security + " Account: " + tick.account + " Quantity: " + tick.quantity + " Type: " + tick.type + " Side: " + tick.side + " Status: " + tick.status);

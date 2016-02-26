@@ -153,7 +153,7 @@ class Example1
         List<ArthikaHFT.tinterfaceTick> tinterfaceTickList = wrapper.getInterface();
 
         // Open first price streaming for one security in all tinterfaces
-        string id1 = wrapper.getPriceBegin(new List<string> { "GBP_USD" }, null, ArthikaHFT.GRANULARITY_TOB, 1, interval, new ArthikaHFTListenerImp1());
+        string id1 = wrapper.getPriceBegin(new List<string> { "GBP/USD" }, null, ArthikaHFT.GRANULARITY_TOB, 1, interval, new ArthikaHFTListenerImp1());
         Thread.Sleep(5000);
 
         // Open second price streaming for two securities in the two first tinterfaces
@@ -164,7 +164,7 @@ class Example1
             tinterfacelist.Add(tinterfaceTickList.ElementAt(0).name);
             tinterfacelist.Add(tinterfaceTickList.ElementAt(1).name);
         }
-        string id2 = wrapper.getPriceBegin(new List<string> { "EUR_USD", "GBP_JPY" }, tinterfacelist, ArthikaHFT.GRANULARITY_FAB, 2, interval, new ArthikaHFTListenerImp1());
+        string id2 = wrapper.getPriceBegin(new List<string> { "EUR/USD", "GBP/JPY" }, tinterfacelist, ArthikaHFT.GRANULARITY_FAB, 2, interval, new ArthikaHFTListenerImp1());
         Thread.Sleep(5000);
 
         // Close second price streaming
@@ -181,7 +181,7 @@ class Example1
             tinterfacelist = new List<string>();
             tinterfacelist.Add(tinterfaceTickList.ElementAt(0).name);
         }
-        string id3 = wrapper.getPriceBegin(new List<string> { "EUR_USD", "EUR_GBP", "EUR_JPY", "GBP_JPY", "GBP_USD", "USD_JPY" }, tinterfacelist, ArthikaHFT.GRANULARITY_TOB, 1, interval, new ArthikaHFTListenerImp1());
+        string id3 = wrapper.getPriceBegin(new List<string> { "EUR/USD", "EUR/GBP", "EUR/JPY", "GBP/JPY", "GBP/USD", "USD/JPY" }, tinterfacelist, ArthikaHFT.GRANULARITY_TOB, 1, interval, new ArthikaHFTListenerImp1());
         Thread.Sleep(5000);
 
         // Close third price streaming

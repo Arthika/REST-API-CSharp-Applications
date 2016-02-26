@@ -39,7 +39,7 @@ password=demo
 
 From here on we will assume it is Example1.cs.
 ```
-string id1 = wrapper.getPriceBegin(new List<string> { "GBP_USD" }, null, ArthikaHFT.GRANULARITY_TOB, 1, interval, new ArthikaHFTListenerImp1());
+string id1 = wrapper.getPriceBegin(new List<string> { "GBP/USD" }, null, ArthikaHFT.GRANULARITY_TOB, 1, interval, new ArthikaHFTListenerImp1());
 ```
 
 In case you want to disable ssl protocol, change the following line:
@@ -79,13 +79,13 @@ or
 $ REST-API-CSharp-Examples 1
 PriceStreaming
 Response timestamp: 1445961714.977141 Contents:
-Security: GBP_USD Price: 1.5312 Side: ask Liquidity: 10000000
-Security: GBP_USD Price: 1.5312 Side: bid Liquidity: 10000000
-Security: GBP_USD Price: 1.5312 Side: ask Liquidity: 10000000
-Security: GBP_USD Price: 1.53129 Side: bid Liquidity: 2000000
+Security: GBP/USD Price: 1.5312 Side: ask Liquidity: 10000000
+Security: GBP/USD Price: 1.5312 Side: bid Liquidity: 10000000
+Security: GBP/USD Price: 1.5312 Side: ask Liquidity: 10000000
+Security: GBP/USD Price: 1.53129 Side: bid Liquidity: 2000000
 Response timestamp: 1445961715.334755 Contents:
-Security: GBP_USD Price: 1.5312 Side: ask Liquidity: 10000000
-Security: GBP_USD Price: 1.5312 Side: bid Liquidity: 10000000
-Security: GBP_USD Price: 1.5312 Side: ask Liquidity: 10000000
-Security: GBP_USD Price: 1.53134 Side: bid Liquidity: 500000
+Security: GBP/USD Price: 1.5312 Side: ask Liquidity: 10000000
+Security: GBP/USD Price: 1.5312 Side: bid Liquidity: 10000000
+Security: GBP/USD Price: 1.5312 Side: ask Liquidity: 10000000
+Security: GBP/USD Price: 1.53134 Side: bid Liquidity: 500000
 ```

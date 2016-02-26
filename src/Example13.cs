@@ -51,7 +51,7 @@ class Example13
         }
 
         ArthikaHFT.orderRequest order1 = new ArthikaHFT.orderRequest();
-        order1.security = "EUR_USD";
+        order1.security = "EUR/USD";
         order1.tinterface = tinterface2;
         order1.quantity = 1000000;
         order1.side = ArthikaHFT.SIDE_BUY;
@@ -59,7 +59,7 @@ class Example13
         order1.timeinforce = ArthikaHFT.VALIDITY_DAY;
 
         ArthikaHFT.orderRequest order2 = new ArthikaHFT.orderRequest();
-        order2.security = "EUR_USD";
+        order2.security = "EUR/USD";
         order2.tinterface = tinterface1;
         order2.quantity = 1000000;
         order2.side = ArthikaHFT.SIDE_SELL;
@@ -67,7 +67,7 @@ class Example13
         order2.timeinforce = ArthikaHFT.VALIDITY_DAY;
 
         ArthikaHFT.orderRequest order3 = new ArthikaHFT.orderRequest();
-        order3.security = "EUR_USD";
+        order3.security = "EUR/USD";
         order3.tinterface = tinterface2;
         order3.quantity = 2000000;
         order3.side = ArthikaHFT.SIDE_BUY;
@@ -75,7 +75,7 @@ class Example13
         order3.timeinforce = ArthikaHFT.VALIDITY_DAY;
 
         ArthikaHFT.orderRequest order4 = new ArthikaHFT.orderRequest();
-        order4.security = "EUR_USD";
+        order4.security = "EUR/USD";
         order4.tinterface = tinterface1;
         order4.quantity = 2000000;
         order4.side = ArthikaHFT.SIDE_SELL;
@@ -83,7 +83,7 @@ class Example13
         order4.timeinforce = ArthikaHFT.VALIDITY_DAY;
 
         ArthikaHFT.orderRequest order5 = new ArthikaHFT.orderRequest();
-        order5.security = "EUR_USD";
+        order5.security = "EUR/USD";
         order5.tinterface = tinterface2;
         order5.quantity = 1000000;
         order5.side = ArthikaHFT.SIDE_BUY;
@@ -91,7 +91,7 @@ class Example13
         order5.timeinforce = ArthikaHFT.VALIDITY_DAY;
 
         ArthikaHFT.orderRequest order6 = new ArthikaHFT.orderRequest();
-        order6.security = "EUR_USD";
+        order6.security = "EUR/USD";
         order6.tinterface = tinterface1;
         order6.quantity = 1000000;
         order6.side = ArthikaHFT.SIDE_SELL;
@@ -99,7 +99,7 @@ class Example13
         order6.timeinforce = ArthikaHFT.VALIDITY_DAY;
 
         Console.WriteLine("Starting Polling1");
-        List<ArthikaHFT.orderTick> orderTickList1 = wrapper.getOrder(new List<string> { "EUR_USD" }, null, null);
+        List<ArthikaHFT.orderTick> orderTickList1 = wrapper.getOrder(new List<string> { "EUR/USD" }, null, null);
         foreach (ArthikaHFT.orderTick tick in orderTickList1)
         {
             Console.WriteLine("TempId: " + tick.tempid + " OrderId: " + tick.orderid + " Security: " + tick.security + " Account: " + tick.account + " Quantity: " + tick.quantity + " Type: " + tick.type + " Side: " + tick.side + " Status: " + tick.status);
@@ -127,7 +127,7 @@ class Example13
         Thread.Sleep(5000);
 
         Console.WriteLine("Starting Polling2");
-        List<ArthikaHFT.orderTick> orderTickList2 = wrapper.getOrder(new List<string> { "EUR_USD" }, null, null);
+        List<ArthikaHFT.orderTick> orderTickList2 = wrapper.getOrder(new List<string> { "EUR/USD" }, null, null);
         foreach (ArthikaHFT.orderTick tick in orderTickList2)
         {
             Console.WriteLine("TempId: " + tick.tempid + " OrderId: " + tick.orderid + " Security: " + tick.security + " Account: " + tick.account + " Quantity: " + tick.finishedquantity + " Type: " + tick.type + " Side: " + tick.side + " Status: " + tick.status);

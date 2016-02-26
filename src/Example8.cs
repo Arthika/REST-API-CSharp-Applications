@@ -52,7 +52,7 @@ class Example8
 
         // get current price
         double price = 0.0;
-        List<ArthikaHFT.priceTick> priceTickList1 = wrapper.getPrice(new List<string> { "EUR_USD" }, new List<string> { tinterface1 }, ArthikaHFT.GRANULARITY_TOB, 1);
+        List<ArthikaHFT.priceTick> priceTickList1 = wrapper.getPrice(new List<string> { "EUR/USD" }, new List<string> { tinterface1 }, ArthikaHFT.GRANULARITY_TOB, 1);
         foreach (ArthikaHFT.priceTick tick in priceTickList1)
         {
             price = tick.price;
@@ -60,7 +60,7 @@ class Example8
 
         // Create pending order. If buy, order price must be lower than current price
         ArthikaHFT.orderRequest order1 = new ArthikaHFT.orderRequest();
-        order1.security = "EUR_USD";
+        order1.security = "EUR/USD";
         order1.tinterface = tinterface1;
         order1.quantity = 500000;
         order1.side = ArthikaHFT.SIDE_BUY;

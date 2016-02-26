@@ -51,14 +51,14 @@ class Example7
         }
 
         ArthikaHFT.orderRequest order1 = new ArthikaHFT.orderRequest();
-        order1.security = "EUR_USD";
+        order1.security = "EUR/USD";
         order1.tinterface = tinterface;
         order1.quantity = 500000;
         order1.side = ArthikaHFT.SIDE_BUY;
         order1.type = ArthikaHFT.TYPE_MARKET;
 
         Console.WriteLine("Starting Polling1");
-        List<ArthikaHFT.orderTick> orderTickList1 = wrapper.getOrder(new List<string> { "EUR_USD" }, new List<string> { tinterface }, null);
+        List<ArthikaHFT.orderTick> orderTickList1 = wrapper.getOrder(new List<string> { "EUR/USD" }, new List<string> { tinterface }, null);
         foreach (ArthikaHFT.orderTick tick in orderTickList1)
         {
             Console.WriteLine("TempId: " + tick.tempid + " OrderId: " + tick.orderid + " Security: " + tick.security + " Account: " + tick.account + " Quantity: " + tick.quantity + " Type: " + tick.type + " Side: " + tick.side + " Status: " + tick.status);
@@ -76,7 +76,7 @@ class Example7
         Thread.Sleep(2000);
 
         Console.WriteLine("Starting Polling2");
-        List<ArthikaHFT.orderTick> orderTickList2 = wrapper.getOrder(new List<string> { "EUR_USD" }, new List<string> { tinterface }, null);
+        List<ArthikaHFT.orderTick> orderTickList2 = wrapper.getOrder(new List<string> { "EUR/USD" }, new List<string> { tinterface }, null);
         foreach (ArthikaHFT.orderTick tick in orderTickList2)
         {
             Console.WriteLine("TempId: " + tick.tempid + " OrderId: " + tick.orderid + " Security: " + tick.security + " Account: " + tick.account + " Quantity: " + tick.quantity + " Type: " + tick.type + " Side: " + tick.side + " Status: " + tick.status);
